@@ -1,2 +1,2 @@
 # Jenkins-Scripts-Bash
-Deploy application to AWS fargate
+Build and deploy application to AWS fargate
