@@ -1,18 +1,17 @@
+def job = jenkins.model.Jenkins.instance.getItemByFullName("uniform-deploy", Job.class)
 // Find previous builds "Keep forever"
-Jenkins.instance.getItemByFullName("uniform-deploy", Job.class).each {
+job.each {
     it.builds.findAll { build -> build.isKeepLog()}
     .each {
         println it.getAbsoluteUrl()
         println("Deleting state Keep forever ${it}");
         it.keepLog(false);
+        it.description = "Release. Deleted state Keep forever!"
     }
 }
 //  ----------- MARK LAST SUCSSEFUL BUILD -----------
-// Get the Project/Job object
-def job = jenkins.model.Jenkins.instance.getItemByFullName("uniform-deploy", Job.class)
 // Get the build by number
 last_sucessful_build_number=job.getLastSuccessfulBuild().getNumber()
 def myBuild = job.getBuild("$last_sucessful_build_number")
 myBuild.description = "Release"
-// Keep this build forever
 myBuild.keepLog(true)
