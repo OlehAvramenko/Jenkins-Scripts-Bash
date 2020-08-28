@@ -6,11 +6,11 @@ cat > fargate-task.json <<EOF
 {
     "family": "${CLUSTER}-fargate", 
     "networkMode": "awsvpc", 
-    "executionRoleArn": "arn:aws:iam::427050172059:role/ecsTaskExecutionRole",
+    "executionRoleArn": "${ARN_IAM_ROLE}",
     "containerDefinitions": [
         {
             "name": "fargate-app-uniform", 
-            "image": "427050172059.dkr.ecr.us-east-1.amazonaws.com/foxtrot:${TAG}", 
+            "image": "${REGISTRY}:${TAG}", 
             "environment": [
                 {
                     "name": "MYSQL_URL",
