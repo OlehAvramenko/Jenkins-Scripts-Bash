@@ -48,7 +48,7 @@ cat > fargate-task.json <<EOF
 }
 EOF
 
-REVISION_OLD=`aws ecs describe-task-definition --region us-east-1 --task-definition Uniform-fargate --query 'taskDefinition.revision'`
+REVISION_OLD=`aws ecs describe-task-definition --region us-east-1 --task-definition ${CLUSTER}-fargate --query 'taskDefinition.revision'`
 # ------------------ CREATE task-definition ---------------------
 
 aws ecs register-task-definition --region ${REGION}  --cli-input-json file://fargate-task.json
