@@ -6,11 +6,11 @@ cat > fargate-task.json <<EOF
 {
     "family": "${CLUSTER}-fargate", 
     "networkMode": "awsvpc", 
-    "executionRoleArn": "arn:aws:iam::427050172059:role/ecsTaskExecutionRole",
+    "executionRoleArn": "${ARN_IAM_ROLE}",
     "containerDefinitions": [
         {
             "name": "fargate-app-uniform", 
-            "image": "427050172059.dkr.ecr.us-east-1.amazonaws.com/foxtrot:${TAG}", 
+            "image": "${REGISTRY}:${TAG}", 
             "environment": [
                 {
                     "name": "MYSQL_URL",
@@ -48,7 +48,7 @@ cat > fargate-task.json <<EOF
 }
 EOF
 
-REVISION_OLD=`aws ecs describe-task-definition --region us-east-1 --task-definition Uniform-fargate --query 'taskDefinition.revision'`
+REVISION_OLD=`aws ecs describe-task-definition --region us-east-1 --task-definition ${CLUSTER}-fargate --query 'taskDefinition.revision'`
 # ------------------ CREATE task-definition ---------------------
 
 aws ecs register-task-definition --region ${REGION}  --cli-input-json file://fargate-task.json
