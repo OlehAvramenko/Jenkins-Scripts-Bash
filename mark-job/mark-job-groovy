@@ -13,5 +13,5 @@ job.each {
 // Get the build by number
 last_sucessful_build_number=job.getLastSuccessfulBuild().getNumber()
 def myBuild = job.getBuild("$last_sucessful_build_number")
-myBuild.description = "<big style=\"color:blue\">Release</big>"
+myBuild.description = "<h5 style=\"color:blue\">Release</h5>"
 myBuild.keepLog(true)
