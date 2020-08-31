@@ -1,15 +1,15 @@
 #!/bin/bash
-#change deploy url to CHARLIE from KILO
-LAST_BUILD_NUMBER=$(curl --silent --user $JENKINS_USER:$JENKINS_PASS -X GET "$JENKINS_URL/job/kilo-deploy/lastSuccessfulBuild/buildNumber")
+
+LAST_BUILD_NUMBER=$(curl --silent --user $JENKINS_USER:$JENKINS_PASS -X GET "$JENKINS_URL/job/${JOB_NAME}/lastSuccessfulBuild/buildNumber")
 DESCRIPTION=$(echo "<p style=\"color:green; font-size:1.5em; font-weight:bold; margin:0\">Release</p>")
 
 echo "last build $LAST_BUILD_NUMBER"
 echo "desc $DESCRIPTION"
 
-PREVIOUS_KEEPLOG_BUILDS=$(curl --silent --user $JENKINS_USER:$JENKINS_PASS -X GET -g "$JENKINS_URL/job/kilo-deploy/api/xml?depth=2&xpath=//build[keepLog=%22true%22]/number&wrapper=forever" | grep -oPm1 "(?<=<number>)[^<]+")
+PREVIOUS_KEEPLOG_BUILDS=$(curl --silent --user $JENKINS_USER:$JENKINS_PASS -X GET -g "$JENKINS_URL/job/${JOB_NAME}/api/xml?depth=2&xpath=//build[keepLog=%22true%22]/number&wrapper=forever" | grep -oPm1 "(?<=<number>)[^<]+")
 for BUILD_NUMBER in $PREVIOUS_KEEPLOG_BUILDS; do
-	curl --silent --user $JENKINS_USER:$JENKINS_PASS -X POST "$JENKINS_URL/job/kilo-deploy/$BUILD_NUMBER/toggleLogKeep"
+	curl --silent --user $JENKINS_USER:$JENKINS_PASS -X POST "$JENKINS_URL/job/${JOB_NAME}y/$BUILD_NUMBER/toggleLogKeep"
 done
 
-curl --silent --user $JENKINS_USER:$JENKINS_PASS -X POST "$JENKINS_URL/job/kilo-deploy/$LAST_BUILD_NUMBER/submitDescription" --data-urlencode "description=$DESCRIPTION" --data-urlencode "Submit=Submit"
-curl --silent --user $JENKINS_USER:$JENKINS_PASS -X POST "$JENKINS_URL/job/kilo-deploy/$LAST_BUILD_NUMBER/toggleLogKeep"
+curl --silent --user $JENKINS_USER:$JENKINS_PASS -X POST "$JENKINS_URL/job/${JOB_NAME}/$LAST_BUILD_NUMBER/submitDescription" --data-urlencode "description=$DESCRIPTION" --data-urlencode "Submit=Submit"
+curl --silent --user $JENKINS_USER:$JENKINS_PASS -X POST "$JENKINS_URL/job/${JOB_NAME}y/$LAST_BUILD_NUMBER/toggleLogKeep"
