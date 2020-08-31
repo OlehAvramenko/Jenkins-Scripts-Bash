@@ -1,4 +1,4 @@
-def job = jenkins.model.Jenkins.instance.getItemByFullName("uniform-deploy", Job.class)
+def job = jenkins.model.Jenkins.instance.getItemByFullName("${JOB_NAME}", Job.class)
 // Find previous builds "Keep forever"
 job.each {
     it.builds.findAll { build -> build.isKeepLog()}
