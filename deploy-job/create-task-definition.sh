@@ -1,6 +1,6 @@
 # CREATE JSON FOR TASK
 # ----------- CHANGE IMAGE ----------------
-TAG=`aws ecr describe-images --region ${REGION} --repository-name foxtrot --query 'sort_by(imageDetails,& imagePushedAt)[-1].imageTags[0]' --output text
+TAG=`aws ecr describe-images --region ${REGION} --repository-name ${NAME_REPO} --query 'sort_by(imageDetails,& imagePushedAt)[-1].imageTags[0]' --output text
 ` 
 cat > fargate-task.json <<EOF 
 {
@@ -9,7 +9,7 @@ cat > fargate-task.json <<EOF
     "executionRoleArn": "${ARN_IAM_ROLE}",
     "containerDefinitions": [
         {
-            "name": "fargate-app-uniform", 
+            "name": "fargate-app-${CLUSTER}", 
             "image": "${REGISTRY}:${TAG}", 
             "environment": [
                 {
@@ -48,7 +48,7 @@ cat > fargate-task.json <<EOF
 }
 EOF
 
-REVISION_OLD=`aws ecs describe-task-definition --region us-east-1 --task-definition ${CLUSTER}-fargate --query 'taskDefinition.revision'`
+REVISION_OLD=`aws ecs describe-task-definition --region ${REGION} --task-definition ${CLUSTER}-fargate --query 'taskDefinition.revision'`
 # ------------------ CREATE task-definition ---------------------
 
 aws ecs register-task-definition --region ${REGION}  --cli-input-json file://fargate-task.json
